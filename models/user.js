@@ -18,8 +18,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (value) => validator.isURL(value),
-      message: 'Введите ссылку на изображение',
+      validator(url) {
+        return validator.isURL(url);
+      },
+      message: 'Укажите ссылку на аватар',
     },
   },
 });

@@ -23,7 +23,12 @@ const createCard = (req, res) => {
   const owner = req.user._id;
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch((err) => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        return res.status(400).send({ message: err.message });
+      }
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 const deleteCard = (req, res) => {
@@ -39,7 +44,7 @@ const deleteCard = (req, res) => {
       if (err instanceof mongoose.CastError) {
         return res.status(400).send({ message: 'id not found' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+      return res.status(500).send({ message: err.message });
     });
 };
 

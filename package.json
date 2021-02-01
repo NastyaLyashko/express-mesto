@@ -1,7 +1,7 @@
 {
   "name": "mesto-express",
   "version": "1.0.0",
-  "description": "",
+  "description": "Mesto project's back-end",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
     "dev": "nodemon app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Lyashko Anastasya",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -22,7 +22,6 @@
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-react": "^7.22.0",
     "nodemon": "^2.0.7"
   }
 }

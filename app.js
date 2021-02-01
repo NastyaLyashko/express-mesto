@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cardsData = require('./routes/cards');
@@ -15,8 +14,6 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false,
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -30,10 +27,6 @@ app.use((req, res, next) => {
 app.use('/', cardsData);
 
 app.use('/', usersData);
-
-app.use((req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
-});
 
 /* eslint-disable no-console */
 app.listen(PORT, () => {

@@ -23,14 +23,5 @@ module.exports = {
     'no-underscore-dangle': ['error', {
       allow: ['_id'],
     }],
-    'linebreak-style': 0,
-    quotes: [
-      'error',
-      'single',
-    ],
-    semi: [
-      'error',
-      'always',
-    ],
   },
 };

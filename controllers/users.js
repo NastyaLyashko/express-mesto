@@ -38,12 +38,17 @@ const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch((err) => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        return res.status(400).send({ message: err.message });
+      }
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 const patchUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
     .orFail(() => {
       throw new Error('404');
     })
@@ -52,8 +57,8 @@ const patchUser = (req, res) => {
       if (err.message === '404') {
         return res.status(404).send({ message: 'not found' });
       }
-      if (err instanceof mongoose.CastError) {
-        return res.status(400).send({ message: 'id not found' });
+      if (err instanceof mongoose.Error.ValidationError) {
+        return res.status(400).send({ message: err.message });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
@@ -61,7 +66,7 @@ const patchUser = (req, res) => {
 
 const patchAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true, new: true })
     .orFail(() => {
       throw new Error('404');
     })
@@ -70,8 +75,8 @@ const patchAvatar = (req, res) => {
       if (err.message === '404') {
         return res.status(404).send({ message: 'not found' });
       }
-      if (err instanceof mongoose.CastError) {
-        return res.status(400).send({ message: 'id not found' });
+      if (err instanceof mongoose.Error.ValidationError) {
+        return res.status(400).send({ message: err.message });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
