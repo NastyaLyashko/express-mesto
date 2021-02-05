@@ -28,6 +28,10 @@ app.use('/', cardsData);
 
 app.use('/', usersData);
 
+app.use((req, res) => {
+  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+});
+
 /* eslint-disable no-console */
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

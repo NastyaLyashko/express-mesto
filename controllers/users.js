@@ -48,7 +48,7 @@ const createUser = (req, res) => {
 
 const patchUser = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true, new: true })
     .orFail(() => {
       throw new Error('404');
     })
@@ -57,7 +57,7 @@ const patchUser = (req, res) => {
       if (err.message === '404') {
         return res.status(404).send({ message: 'not found' });
       }
-      if (err instanceof mongoose.Error.ValidationError) {
+      if (err instanceof mongoose.CastError) {
         return res.status(400).send({ message: err.message });
       }
       return res.status(500).send({ message: 'На сервере произошла ошибка' });

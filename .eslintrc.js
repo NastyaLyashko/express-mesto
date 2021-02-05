@@ -5,8 +5,6 @@ module.exports = {
     node: true,
   },
   extends: [
-    'eslint:recommended',
-    'plugin:react/recommended',
     'airbnb-base',
   ],
   parserOptions: {
@@ -16,9 +14,6 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-  ],
   rules: {
     'no-underscore-dangle': ['error', {
       allow: ['_id'],
