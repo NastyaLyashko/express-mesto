@@ -60,6 +60,9 @@ const patchUser = (req, res) => {
       if (err instanceof mongoose.CastError) {
         return res.status(400).send({ message: err.message });
       }
+      if (err instanceof mongoose.Error.ValidationError) {
+        return res.status(400).send({ message: err.message });
+      }
       return res.status(500).send({ message: 'На сервере произошла ошибка' });
     });
 };
