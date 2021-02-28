@@ -5,6 +5,7 @@ const cardsData = require('./routes/cards');
 const usersData = require('./routes/users');
 const controllers = require('../controllers/users');
 const auth = require('./middlewares/auth');
+const cors = require('cors')
 
 const { PORT = 3000 } = process.env;
 
@@ -15,6 +16,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+app.use(cors());
 
 app.use(bodyParser.json());
 
