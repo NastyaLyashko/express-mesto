@@ -15,7 +15,7 @@ const getUsers = (req, res) => {
       if (err.message === '404') {
         return res.status(404).send({ message: 'not found' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+      return res.status(500).send({ message: 'На сервере произошла ошибка 1' });
     });
 };
 
@@ -32,7 +32,7 @@ const getUser = (req, res) => {
       if (err instanceof mongoose.CastError) {
         return res.status(400).send({ message: 'id not found' });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+      return res.status(500).send({ message: 'На сервере произошла ошибка 2' });
     });
 };
 
@@ -51,7 +51,7 @@ const createUser = (req, res) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: err.message });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+      return res.status(500).send({ message: 'На сервере произошла ошибка 3' });
     });
 };
 
@@ -72,7 +72,7 @@ const patchUser = (req, res) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: err.message });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+      return res.status(500).send({ message: 'На сервере произошла ошибка 4' });
     });
 };
 
@@ -90,7 +90,7 @@ const patchAvatar = (req, res) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: err.message });
       }
-      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+      return res.status(500).send({ message: 'На сервере произошла ошибка 5' });
     });
 };
 
