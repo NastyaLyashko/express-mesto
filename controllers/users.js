@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const getUsers = (req, res) => {
@@ -35,8 +37,15 @@ const getUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
+  const { name, about, avatar, email, password } = req.body;
+  bcrypt.hash(password, 10)
+    .then(hash => User.create({
+      name: name,
+      about: about,
+      avatar: avatar,
+      email: email,
+      password: hash, 
+    }))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
@@ -85,6 +94,32 @@ const patchAvatar = (req, res) => {
     });
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.send({ token });
+    })
+    .catch((err) => {
+      res
+        .status(401)
+        .send({ message: err.message });
+    });
+}; 
+
+const getUserInfo = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFound('Нет такого пользователя');
+      }
+      return res.status(200).send({ data: user });
+    })
+    .catch(next);
+};
+
 module.exports = {
-  getUsers, getUser, createUser, patchUser, patchAvatar,
+  getUsers, getUser, createUser, patchUser, patchAvatar, login, getUserInfo,
 };

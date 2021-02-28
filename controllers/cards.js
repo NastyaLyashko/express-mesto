@@ -32,6 +32,7 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
+  const owner = req.user._id;
   Card.findByIdAndRemove(req.params.cardId)
     .orFail(() => {
       throw new Error('404');
