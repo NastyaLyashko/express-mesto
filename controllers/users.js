@@ -46,7 +46,7 @@ const createUser = (req, res) => {
       email: email,
       password: hash, 
     }))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: err.message });
