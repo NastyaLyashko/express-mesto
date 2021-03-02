@@ -38,6 +38,7 @@ const getUser = (req, res) => {
 
 const createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
+  console.log({ name, about, avatar, email, password });
   bcrypt.hash(password, 10)
     .then(hash => User.create({
       name: name,
