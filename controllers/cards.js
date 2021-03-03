@@ -58,7 +58,7 @@ const likeCard = (req, res) => {
     .orFail(() => {
       throw new Error('404');
     })
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.send(card))
     .catch((err) => {
       if (err.message === '404') {
         return res.status(404).send({ message: 'not found' });
