@@ -6,7 +6,9 @@ const cardsData = require('./routes/cards');
 const usersData = require('./routes/users');
 const controllers = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger'); 
+const registerValidator = require('./middlewares/validators/register')
 
 const { PORT = 3000 } = process.env;
 
@@ -25,13 +27,15 @@ app.use(bodyParser.json());
 app.use(requestLogger);
 
 app.post('/signin', controllers.login);
-app.post('/signup', controllers.createUser); 
+app.post('/signup', registerValidator, controllers.createUser); 
 
 app.use(auth);
 
 app.use('/', cardsData);
 
 app.use('/', usersData);
+
+app.use(errorHandler);
 
 app.use(errorLogger);
 
