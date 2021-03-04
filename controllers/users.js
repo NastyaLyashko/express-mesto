@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { NotFound, Unauthorized } = require('../errors');
+const { NotFound, Unauthorized, BadRequest } = require('../errors');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -37,6 +37,9 @@ const createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
   console.log({ name, about, avatar, email, password });
   bcrypt.hash(password, 10)
+    .orFail(() => {
+      throw new BadRequest ('BadRequest');
+    })
     .then(hash => User.create({
       name: name,
       about: about,
