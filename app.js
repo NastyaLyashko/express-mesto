@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const { errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const cardsData = require('./routes/cards');
 const usersData = require('./routes/users');
@@ -34,6 +35,8 @@ app.use(auth);
 app.use('/', cardsData);
 
 app.use('/', usersData);
+
+app.use(errors());
 
 app.use(errorHandler);
 
