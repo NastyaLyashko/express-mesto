@@ -49,7 +49,7 @@ const createUser = (req, res, next) => {
       password: hash, 
       })
     })
-    .then((user) => res.send(user))
+    .then((user) => res.send({ data: user }))
     .catch((err) => {
       next(err);
       if (err instanceof mongoose.Error.ValidationError) {
