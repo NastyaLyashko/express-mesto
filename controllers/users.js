@@ -43,11 +43,12 @@ const createUser = (req, res, next) => {
       avatar: avatar,
       email: email,
       password: hash, 
-    });
-    if(!hash) {
-      throw new BadRequest ('Введены некорректные данные');
-    })
-    .then((user) => res.send(user))
+    }))
+    .then((user) => {
+      if(!user) {
+        throw new BadRequest ('Некоректные данные');
+      }
+      res.send(user)})
     .catch((err) => {
       next(err);
       if (err instanceof mongoose.Error.ValidationError) {
