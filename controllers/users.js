@@ -93,10 +93,10 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
-    .orFail(() => {
-      throw new Unauthorized ('Пользователь не зарегестрирован');
-    })
     .then((user) => {
+      if(!user) {
+        throw new Unauthorized ('Пользователь не зарегистрирован');
+      }
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.send({ token });
     })
