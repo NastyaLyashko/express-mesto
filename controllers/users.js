@@ -38,9 +38,6 @@ const createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => {
-      if(!hash) {
-        throw new BadRequest ('Переданы некорректные данные');
-      };
       User.create({
       name: name,
       about: about,
