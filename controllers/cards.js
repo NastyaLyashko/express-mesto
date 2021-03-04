@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Card = require('../models/card');
-const { NotFound, Unauthorized } = require('../errors');
+const { NotFound, BadRequest } = require('../errors');
 
 const getCard = (req, res, next) => {
   Card.find({})
@@ -20,6 +20,9 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
+    .orFail(() => {
+      throw new BadRequest ('BadRequest');
+    })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       next(err);
@@ -53,7 +56,7 @@ const likeCard = (req, res, next) => {
     .orFail(() => {
       throw new NotFound('Карточка не найдена');
     })
-    .then((card) => res.send(card))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       next(err);
       if (err instanceof mongoose.CastError) {

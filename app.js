@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { errors } = require('celebrate');
@@ -9,7 +10,8 @@ const controllers = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger'); 
-const registerValidator = require('./middlewares/validators/register')
+const registerValidator = require('./middlewares/validators/register');
+const loginValidator = require('./middlewares/validators/login');
 
 const { PORT = 3000 } = process.env;
 
@@ -27,7 +29,13 @@ app.use(bodyParser.json());
 
 app.use(requestLogger);
 
-app.post('/signin', controllers.login);
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+}); 
+
+app.post('/signin', loginValidator, controllers.login);
 app.post('/signup', registerValidator, controllers.createUser); 
 
 app.use(auth);
@@ -36,11 +44,11 @@ app.use('/', cardsData);
 
 app.use('/', usersData);
 
+app.use(errorLogger);
+
 app.use(errors());
 
 app.use(errorHandler);
-
-app.use(errorLogger);
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });

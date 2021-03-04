@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { NotFound, Unauthorized, BadRequest } = require('../errors');
+const { JWT_SECRET } = process.env;
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -35,18 +36,19 @@ const getUser = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
-  console.log({ name, about, avatar, email, password });
   bcrypt.hash(password, 10)
-    .orFail(() => {
-      throw new BadRequest ('BadRequest');
-    })
-    .then(hash => User.create({
+    .then((hash) => {
+      if(!hash) {
+        throw new BadRequest ('Переданы некорректные данные');
+      };
+      User.create({
       name: name,
       about: about,
       avatar: avatar,
       email: email,
       password: hash, 
-    }))
+      })
+    })
     .then((user) => res.send(user))
     .catch((err) => {
       next(err);
@@ -60,7 +62,7 @@ const patchUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true, new: true })
     .orFail(() => {
-      throw new NotFound ('Пользователь не найден');
+      throw new BadRequest ('Переданы некорректные данные');
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
@@ -78,7 +80,7 @@ const patchAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { runValidators: true, new: true })
     .orFail(() => {
-      throw new NotFound ('Пользователь не найден');
+      throw new BadRequest ('Пользователь не найден');
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
@@ -97,7 +99,7 @@ const login = (req, res, next) => {
       if(!user) {
         throw new Unauthorized ('Пользователь не зарегистрирован');
       }
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.send({ token });
     })
     .catch((err) => {
@@ -109,9 +111,9 @@ const getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFound('Нет такого пользователя');
+        throw new NotFound('Пользователь не найден');
       }
-      return res.status(200).send({ data: user });
+      return res.status(200).send({ data: user });k
     })
     .catch((err) => {
       next(err);
