@@ -43,7 +43,10 @@ const createUser = (req, res, next) => {
       avatar: avatar,
       email: email,
       password: hash, 
-    }))
+    });
+    if(!hash) {
+      throw new BadRequest ('Введены некорректные данные');
+    })
     .then((user) => res.send(user))
     .catch((err) => {
       next(err);
