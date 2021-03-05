@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config');
 const User = require('../models/user');
-const { NotFound, Unauthorized, BadRequest } = require('../errors');
+const { NotFound, Unauthorized, BadRequest, Conflict } = require('../errors');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -36,6 +36,12 @@ const getUser = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
+  User.findOne({ email })
+    .then((user) => {
+      if (user) {
+        throw new Conflict ('Пользователь с таким email уже зарегестрирован');
+      }
+    })
   bcrypt.hash(password, 10)
     .then(hash => User.create({
       name: name,
@@ -48,7 +54,14 @@ const createUser = (req, res, next) => {
       if(!user) {
         throw new BadRequest ('Некоректные данные');
       }
-      res.send(user)})
+      res.send({
+        _id: user._id,
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      })
+    })
     .catch((err) => {
       next(err);
       if (err instanceof mongoose.Error.ValidationError) {
