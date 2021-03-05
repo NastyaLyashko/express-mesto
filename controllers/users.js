@@ -45,8 +45,8 @@ const createUser = (req, res, next) => {
       if (user) {
         throw new Conflict('Пользователь с таким email уже зарегестрирован');
       }
-    });
-  bcrypt.hash(password, 10)
+    })
+    bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name,
       about,
