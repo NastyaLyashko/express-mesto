@@ -45,29 +45,28 @@ const createUser = (req, res, next) => {
       if (user) {
         throw new Conflict('Пользователь с таким email уже зарегестрирован');
       }
-    })
     bcrypt.hash(password, 10)
-    .then((hash) => User.create({
-      name,
-      about,
-      avatar,
-      email,
-      password: hash,
-    }))
-    .then(({
-      userId,
-      userName,
-      userAbout,
-      userAvatar,
-      usereMail,
-    }) => {
-      res.send({
-        _id: userId,
-        name: userName,
-        about: userAbout,
-        avatar: userAvatar,
-        email: usereMail,
-      });
+      .then((hash) => User.create({
+        name,
+        about,
+        avatar,
+        email,
+        password: hash,
+      }))
+      .then(({
+        userId,
+        userName,
+        userAbout,
+        userAvatar,
+        usereMail,
+      }) => {
+        res.send({
+          _id: userId,
+          name: userName,
+          about: userAbout,
+          avatar: userAvatar,
+          email: usereMail,
+        });
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
