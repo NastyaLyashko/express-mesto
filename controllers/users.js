@@ -44,23 +44,26 @@ const createUser = (req, res, next) => {
     })
   bcrypt.hash(password, 10)
     .then(hash => User.create({
-      name: name,
-      about: about,
-      avatar: avatar,
-      email: email,
+      name,
+      about,
+      avatar,
+      email,
       password: hash, 
     }))
-    .then((user) => {
-      if(!user) {
-        throw new BadRequest ('Некоректные данные');
-      }
+    .then(({
+      _id,
+      name,
+      about,
+      avatar,
+      email,
+    }) => {
       res.send({
-        _id: user._id,
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-      })
+        _id,
+        name,
+        about,
+        avatar,
+        email,
+      });
     })
     .catch((err) => {
       next(err);
