@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { userIdValidator, patchUserValidator, patchAvatarValidator } = require('../middlewares/validators/userValidator')
+const { userIdValidator, patchUserValidator, patchAvatarValidator } = require('../middlewares/validators/userValidator');
 
 const controllers = require('../controllers/users');
 

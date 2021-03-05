@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { postCardValidator, cardIdValidator } = require('../middlewares/validators/cardsValidator');
 
-
 const controller = require('../controllers/cards');
 
 router.get('/cards', controller.getCard);

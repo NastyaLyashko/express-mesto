@@ -9,7 +9,7 @@ const usersData = require('./routes/users');
 const controllers = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler');
-const { requestLogger, errorLogger } = require('./middlewares/logger'); 
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const registerValidator = require('./middlewares/validators/register');
 const loginValidator = require('./middlewares/validators/login');
 
@@ -33,10 +33,10 @@ app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
-}); 
+});
 
 app.post('/signin', loginValidator, controllers.login);
-app.post('/signup', registerValidator, controllers.createUser); 
+app.post('/signup', registerValidator, controllers.createUser);
 
 app.use(auth);
 
