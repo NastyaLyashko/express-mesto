@@ -20,7 +20,7 @@ const postCardValidator = celebrate({
 
 const cardIdValidator = celebrate({
   params: {
-    _id: Joi.string().required().custom((value, helper) => {
+    cardId: Joi.string().required().custom((value, helper) => {
       if (mongoose.Types.ObjectId.isValid(value)) {
         return value;
       }
