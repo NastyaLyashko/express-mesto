@@ -33,23 +33,24 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  const owner = req.user._id;
-  if (!owner) {
-    throw new Forbidden('Нельзя удалить чужую карточку');
-  }
-  if (owner) {
-    Card.findByIdAndRemove(req.params.cardId)
-      .orFail(() => {
-        throw new NotFound('Карточка не найдена');
-      })
-      .then((card) => res.send({ data: card }))
-      .catch((err) => {
-        if (err instanceof mongoose.CastError) {
-          return res.status(400).send({ message: 'id not found' });
-        }
-        return next(err);
-      });
-  }
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (card.owner !== req.user._id) {
+        throw new Forbidden('Нельзя удалить чужую карточку');
+      }
+      return Card.findByIdAndRemove(req.params.cardId)
+        .orFail(() => {
+          throw new NotFound('Карточка не найдена');
+        })
+        .catch((err) => next(err));
+    })
+    .then((card) => res.send({ data: card }))
+    .catch((err) => {
+      if (err instanceof mongoose.CastError) {
+        return res.status(400).send({ message: 'id not found' });
+      }
+      return next(err);
+    });
 };
 
 const likeCard = (req, res, next) => {

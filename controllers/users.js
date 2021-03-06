@@ -67,7 +67,7 @@ const createUser = (req, res, next) => {
             avatar: userAvatar,
             email: usereMail,
           });
-        })
+        });
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
