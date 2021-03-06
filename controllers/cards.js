@@ -60,10 +60,11 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(() => {
-      throw new NotFound('Карточка не найдена');
-    })
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) {
+        throw new NotFound('Карточка не найдена');
+      }
+      res.send({ data: card })})
     .catch((err) => {
       if (err instanceof mongoose.CastError) {
         return res.status(400).send({ message: 'id not found' });
