@@ -20,10 +20,11 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .orFail(() => {
-      throw new BadRequest('BadRequest');
-    })
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) {
+        throw new BadRequest('BadRequest');
+      }
+      res.send({ data: card })})
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: err.message });
