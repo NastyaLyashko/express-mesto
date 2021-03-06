@@ -24,7 +24,8 @@ const createCard = (req, res, next) => {
       if (!card) {
         throw new BadRequest('BadRequest');
       }
-      res.send({ data: card })})
+      res.send({ data: card });
+    })
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         return res.status(400).send({ message: err.message });
@@ -64,7 +65,8 @@ const likeCard = (req, res, next) => {
       if (!card) {
         throw new NotFound('Карточка не найдена');
       }
-      res.send({ data: card })})
+      res.send({ data: card });
+    })
     .catch((err) => {
       if (err instanceof mongoose.CastError) {
         return res.status(400).send({ message: 'id not found' });
